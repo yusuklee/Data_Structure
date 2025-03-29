@@ -29,7 +29,7 @@ void merge(int arr[], int left, int mid, int right){
 }
 
 void mergesort(int arr[], int left, int right){
-    if(right>left){
+    if(right>left){ 
     int mid = (left+right)/2;
     mergesort(arr,left,mid);
     mergesort(arr,mid+1,right);
