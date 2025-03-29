@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/USER/Data_Structure",
-      "program": "c:/Users/USER/Data_Structure/build/Debug/outDebug",
+      "cwd": "c:/Users/USER/Data_Structure/search",
+      "program": "c:/Users/USER/Data_Structure/search/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

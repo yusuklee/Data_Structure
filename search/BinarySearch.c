@@ -1,35 +1,28 @@
 #include<stdio.h>
-int binarySearch(int arr[],int low,int high,int target){
-    while(low<=high){
-        int mid=(low+high)/2;
-        if(arr[mid]>target){
-            high=mid-1;
-        }else if(arr[mid]<target){low=mid+1;}
-        else return mid;
+
+int binarysearch(int arr[], int size, int target){
+    int left=0;
+    int right = size-1;
+    while (right>=left)
+    {
+        int mid = (left+right)/2;
+        if(arr[mid]==target) return mid;
+        else if(arr[mid]>target) right=mid-1;
+        else left = mid+1;
     }
     return -1;
+    
 }
-
 int main(){
-    int arr[]={1,2,3,4,5,6,7,8,9,10};
-    int n=sizeof(arr)/sizeof(arr[0]);
+    int arr1[]={1,2,3,4,5,6,7,8,9,10};
+    int n=sizeof(arr1)/sizeof(arr1[0]);
     int target;
 
-    printf("Array: ");
-
-    for(int i=0;i<n;i++){
-        printf("%d", arr[i]);
-    }
-    printf("\n");
-    printf("enter the search target: ");
+    printf("enter the number that you are trying to find at arr1:");
     scanf("%d",&target);
-
-    int result=binarySearch(arr,0,n-1,target);
-
-    if(result!=-1){
-        printf("element found at index:%d",result);
+    if(binarysearch(arr1,n,target)==-1){
+        printf("the number that you are finding is not in the arr1");
     }else{
-        printf("element not found in the array");
+        printf("the number is at arr1[%d]",binarysearch(arr1,n,target));
     }
-    return 0;
 }
