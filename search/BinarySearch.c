@@ -25,4 +25,4 @@ int main(){
     }else{
         printf("the number is at arr1[%d]",binarysearch(arr1,n,target));
     }
-}
+} //탐색 완료
