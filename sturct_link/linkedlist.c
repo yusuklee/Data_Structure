@@ -1,97 +1,78 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct node{
     int data;
-    struct node * link;
+    struct node* next;
 }node;
 
-typedef node * p;
+typedef node* p;
 
 p create(int data){
     p newnode = malloc(sizeof(node));
-    newnode->data = data;
-    newnode->link = NULL;
+    newnode -> data = data;
+    newnode ->next = NULL;
     return newnode;
 }
 
 p append(p head, int data){
     p newnode = create(data);
-    if(head==NULL)return newnode; //아무것도 없는데 생성하면 head가 새로생성한 노드겟지
-
+    if(head==NULL)return newnode;
     p temp = head;
-    while (temp->link!=NULL)
+    while ((temp->next !=NULL))
     {
-        temp= temp->link;
+        temp = temp -> next;
     }
-    temp->link = newnode;
+    temp->next = newnode;
     return head;
-    
 }
 
 int find(p head, int data){
     p temp = head;
-    int target = 0;
+    int position = 1;
     while (temp!=NULL)
-    {
-        if(temp->data==data)return target;
-        temp= temp->link;
-        target++;
+    {   if(temp -> data ==data) return position;
+        temp = temp -> next;
+        position++;
     }
-    return -1;
+    if(temp==NULL) return -1;
 }
 
-p insert(p head, int data, int target){
+p insert(p head, int data, int position){
     p newnode = create(data);
-    if(target==0){
-        newnode->link=head;
+    if(position == 0){
+        newnode->next=head;
         return newnode;
     }
-    p temp =head;
-    int i=0;
-    while (i<target-1 && temp!=NULL)
+    p temp = head;
+    int count = 1;
+    while (temp!=NULL && count<position)
     {
-        temp = temp->link;
-        i++;
+        temp = temp->next;
+        count++;
     }
-    if(temp==NULL){
-        printf("the target is out of range");
-        free(newnode);
-        return head;
-    }
-    newnode -> link = temp ->link;
-    temp->link = newnode;
+    newnode->next= temp->next;
+    temp->next = newnode;
     return head;
-    
 }
 
 p delete(p head, int data){
-    if(head==NULL){
-        printf("empty");
-        return NULL;
-    }
+    if(head==NULL)return NULL;
+    p temp = head;
+    p prev = NULL;
     if(head->data==data){
-        p temp= head;
-        head= head->link;
+        head = head->next;
         free(temp);
         return head;
     }
-    p temp = head;
-    p prev = NULL;
-
-    while (temp!=NULL&&temp->data!=data)
-    {
-        prev = temp;
-        temp= temp->link;
+    while (temp!=NULL && temp->data!=data)
+    {   prev= temp;
+        temp = temp->next;
     }
-    if(temp==NULL){
-        printf("value not found");
-        return head;
-    }
-    prev ->link = temp->link;
+    if(temp==NULL) return head;
+    prev->next = temp->next;
     free(temp);
     return head;
-    
 }
 
 void printnode(p head){
@@ -99,7 +80,7 @@ void printnode(p head){
     while (temp!=NULL)
     {
         printf("%d->",temp->data);
-        temp=temp->link;
+        temp=temp->next;
     }
     printf("Null\n");
     
@@ -109,7 +90,7 @@ void freenode(p head){
     p temp;
     while(head!=NULL){
         temp=head;
-        head=head->link;
+        head=head->next;
         free(temp);
     }
 }
@@ -153,4 +134,3 @@ int main(){
     return 0;
 
 }
-
