@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/USER/Data_Structure/sturct_link",
-      "program": "c:/Users/USER/Data_Structure/sturct_link/build/Debug/outDebug",
+      "cwd": "c:/Users/USER/Data_Structure/stack",
+      "program": "c:/Users/USER/Data_Structure/stack/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
