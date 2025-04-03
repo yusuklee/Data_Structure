@@ -46,7 +46,7 @@ void infix_to_postfix(char* infix, char* postfix){
             }if(peek()=='(')
             {pop();}
         }else{
-            while (!isEmpty()&&priority(peek())>=priority(token))
+            while (!isEmpty()&&priority(peek())>priority(token))
             {
                 postfix[j++]=pop();
             }push(token);
@@ -64,7 +64,7 @@ void infix_to_postfix(char* infix, char* postfix){
 int main(){
     char infix[MAX], postfix[MAX];
 
-    printf("enter the middle fix");
+    printf("enter the middle fix: ");
     scanf("%s",infix);
 
     infix_to_postfix(infix,postfix);
