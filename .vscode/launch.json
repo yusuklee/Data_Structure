@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/USER/Data_Structure/stack",
-      "program": "c:/Users/USER/Data_Structure/stack/build/Debug/outDebug",
+      "cwd": "c:/Users/USER/Desktop/Data_Structure/linked_list_use",
+      "program": "c:/Users/USER/Desktop/Data_Structure/linked_list_use/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
