@@ -1,97 +1,111 @@
 #include <stdio.h>
 #include <stdlib.h>
-typedef struct polyNode {
+
+typedef struct node{
     int coef;
-    int expon;
-    struct polyNode *link;
-}polyNode;
+    int exp;
+    struct node* link;
+}node;
 
+typedef node* nodepointer;
 
-typedef polyNode* p;
-
-void attach(int coefficient, int exponent, p *rear){ 
-    p temp = malloc(sizeof(polyNode));
-    temp->coef = coefficient;
-    temp->expon = exponent;  // ❗️ 이거 빠졌었음!
+nodepointer attach(int coef2, int exp2, nodepointer rear){
+    nodepointer temp = malloc(sizeof(node));
+    temp->coef =coef2;
+    temp->exp = exp2;
     temp->link = NULL;
-    (*rear)->link = temp;
-    *rear = temp;
+    rear->link = temp; //rear의 link가 새로운 노드를 가리킴.
+    return temp; //맨뒤 노드를 가리키는 temp를 return
 }
 
-p padd(p a, p b){
-    p c, rear, temp;
+nodepointer padd(nodepointer a, nodepointer b){
+    nodepointer c, rear, temp;
     int sum;
 
-    rear = malloc(sizeof(polyNode));
+    rear = malloc(sizeof(node));
     rear->link = NULL;
     c= rear;
 
-    while (a && b )
+    while (a && b)
     {
-        if(a->expon > b->expon){
-            attach(a->coef, a->expon, &rear);
+        if(a->exp > b->exp){ //a의 지수가 더클때
+            rear = attach(a->coef, a->exp, rear);
             a=a->link;
-        } else if(a->expon == b->expon){
-            sum = a->coef + b->coef;
-            if(sum) attach(sum, a->expon, &rear);
-            a = a->link;
-            b = b->link;
-        } else {
-            attach(b->coef, b->expon, &rear);
-            b = b->link;
+        }else if(a->exp == b->exp){
+            sum = a->coef +b->coef;
+            if(sum)rear=attach(sum,a->exp,rear);
+            a=a->link;
+            b=b->link;
+        }else{
+            rear=attach(b->coef,b->exp,rear);
+            b=b->link;
         }
     }
- 
-    for(;a;a=a->link) attach(a->coef, a->expon, &rear);
-    for(;b;b=b->link) attach(b->coef, b->expon, &rear);
-
-    temp = c;
-    c = c->link;
-    free(temp);
-    return c;
-}
-
-void printPoly(p poly){
-    while (poly)
+    while (a)
     {
-        printf("%dx^%d",poly->coef,poly->expon);
-        if(poly->link)printf("+");
-        poly = poly->link;
+        rear = attach(a->coef, a->exp, rear);
+        a=a->link;
     }
-    printf("\n");
+    while (b)
+    {
+        rear= attach(b->coef, b->exp,rear);
+        b=b->link;
+    }
+    temp=c;
+    c=c->link;
+    free(temp);
+    return c; //더미 노드를 제거하고 c는 맨앞을 가리킴
+    
+    
     
 }
 
+void printnodeList(nodepointer nodeList){
+    while (nodeList) 
+    {
+        printf("%dx^%d",nodeList->coef, nodeList->exp);
+        if(nodeList->link)printf("+");
+        nodeList=nodeList->link;
+    }
+    printf("\n");
+}
+
 int main(){
-    p a = NULL, b=NULL, rearA, rearB, result;
+    nodepointer a =NULL, b=NULL, rearA, rearB, result,temp;
 
-    a=malloc(sizeof(polyNode));
-    a->link =NULL;
+    a=malloc(sizeof(node));
+    a->link=NULL;
     rearA=a;
-    attach(3,4,&rearA);
-    attach(2,2,&rearA);
-    attach(1,0,&rearA);
+    rearA=attach(3,4,rearA);
+    rearA=attach(2,2,rearA);
+    rearA=attach(1,0,rearA);
+    temp=a;
     a=a->link;
+    free(temp);
 
-    b=malloc(sizeof(polyNode));
+
+    b=malloc(sizeof(node));
     b->link=NULL;
     rearB=b;
-    attach(4,3,&rearB);
-    attach(2,2,&rearB);
-
-    attach(5,0,&rearB);
+    rearB=attach(3,4,rearB);
+    rearB=attach(2,2,rearB);
+    rearB=attach(1,0,rearB);
+    temp=b;
     b=b->link;
+    free(temp);
 
-
-    result = padd(a,b);
+    result = padd(a,b); //다더하고 만들어진 연결리스트 맨앞노드를 가리키는 포인터 result
 
     printf("A(x): ");
-    printPoly(a);
+    printnodeList(a);
     printf("B(x): ");
-    printPoly(b);
-    printf("A(x)+B(x): ");
-    printPoly(result);
+    printnodeList(b);
+    printf("A(x)+ B(x): ");
+    printnodeList(result);
+
+
     return 0;
+
 }
 
 
