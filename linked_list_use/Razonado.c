@@ -1,82 +1,81 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-//이중 연결 리스트의 노드 구조체
 typedef struct node{
     int data;
     struct node* llink;
     struct node* rlink;
-}Node;
+}node;
 
-void dinsert(Node* node, Node* newnode){
-    newnode->llink = node;
-    newnode->rlink = node->rlink;
-    if(node->rlink!=NULL){
-        node->rlink->llink = newnode;
+void insert(node* selectNode, node* newnode){
+    newnode->llink=selectNode;
+    newnode->rlink=selectNode->rlink;
+    if(selectNode->rlink!=NULL){
+        selectNode->rlink->llink=newnode;
     }
-    node->rlink = newnode;
+    selectNode->rlink = newnode;
 }
 
-void ddelete(Node* head, Node* deleted){
-    if(head==deleted){
-        printf("Deletion of head node not permitted.\n");
+void deleteNode(node* start, node* deleted){
+    if(start==deleted){
+        printf("you cant delete the start\n");
         return;
     }
     deleted->llink->rlink=deleted->rlink;
     if(deleted->rlink!=NULL){
-        deleted->rlink->llink = deleted->llink;
+        deleted->rlink->llink=deleted->llink;
     }
     free(deleted);
 }
 
-void printList(Node* head) {
-    Node* current = head;
-    while (current != NULL) {
-        printf("%d ", current->data);
-        current = current->rlink;
-    }
-    printf("\n");
-}
-
-void freeList(Node* head) {
-    Node* current = head;
-    while (current != NULL) {
-        Node* next = current->rlink;
+void printList(node* start){
+    node* current=start;
+    while(current!=NULL){
+        node* next = current->rlink;
         free(current);
-        current = next;
+        current=next;
+    }
+}
+void freeList(node * start){
+    node * current = start;
+    while (current!=NULL)
+    {
+        node* next = current->rlink;
+        free(current);
+        current=next;
     }
 }
 
-int main(void){
-    Node* head = malloc(sizeof(Node));
-    head->data=0;
-    head->llink=NULL;
-    head->rlink = NULL;
+int main(){
+    node* start = malloc(sizeof(node));
+    start->data=0;
+    start->llink=NULL;
+    start->rlink=NULL;
 
-    Node* node1 = malloc(sizeof(Node));
+    node* node1=malloc(sizeof(node));
     node1->data=1;
-    node1->llink= node1->rlink=NULL;
-    dinsert(head,node1);
+    node1->llink=node1->rlink=NULL;
+    insert(start,node1);
 
-    Node* node2 = malloc(sizeof(Node));
-    node2->data = 2;
+    node* node2=malloc(sizeof(node));
+    node2->data=2;
     node2->llink=node2->rlink=NULL;
-    dinsert(node1,node2);
+    insert(node1,node2);
 
-    Node *node3 = (Node *)malloc(sizeof(Node));
-    node3->data = 3;
-    node3->llink = node3->rlink = NULL;
-    dinsert(node2, node3); 
+    node* node3=malloc(sizeof(node));
+    node3->data=3;
+    node3->llink=node3->rlink=NULL;
+    insert(node2,node3);
 
     printf("List after insertion: ");
-    printList(head);
+    printList(start);
 
-    ddelete(head,node2);
+    deleteNode(start,node2);
 
-    printf("list after deletion of node with data2: ");
-    printList(head);
+    printf("List after deletion of node with data2: ");
+    printList(start);
 
-    freeList(head);
+    freeList(start);
     return 0;
 
 }
