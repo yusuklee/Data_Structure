@@ -1,111 +1,124 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct node{
+typedef struct polyNode *polyPointer;
+typedef struct polyNode
+{
     int coef;
-    int exp;
-    struct node* link;
-}node;
+    int expon;
+    polyPointer link;
+} polyNode;
 
-typedef node* nodepointer;
-
-nodepointer attach(int coef2, int exp2, nodepointer rear){
-    nodepointer temp = malloc(sizeof(node));
-    temp->coef =coef2;
-    temp->exp = exp2;
-    temp->link = NULL;
-    rear->link = temp; //rear의 link가 새로운 노드를 가리킴.
-    return temp; //맨뒤 노드를 가리키는 temp를 return
+polyPointer createTerm(int coef, int expon){
+    polyPointer newTerm = (polyPointer)malloc(sizeof(polyNode));
+    newTerm->coef = coef;
+    newTerm->expon = expon;
+    newTerm->link = NULL;
+    return newTerm;
 }
 
-nodepointer padd(nodepointer a, nodepointer b){
-    nodepointer c, rear, temp;
+void attach(polyPointer ptr, int coef, int expon){
+    polyPointer temp=createTerm(coef,expon);
+    while (ptr->link!=NULL)
+    {
+        ptr=ptr->link;
+    }
+    ptr->link=temp;
+    
+}
+
+polyPointer addPolynomials(polyPointer a, polyPointer b){
+    polyPointer result, rear, temp;
+    result = (polyPointer)malloc(sizeof(polyNode));
+    result->link = NULL;
+    rear = result;
     int sum;
 
-    rear = malloc(sizeof(node));
-    rear->link = NULL;
-    c= rear;
-
-    while (a && b)
-    {
-        if(a->exp > b->exp){ //a의 지수가 더클때
-            rear = attach(a->coef, a->exp, rear);
+    while(a&&b){
+        if(a->expon > b->expon){ 
+             attach(rear, a->coef, a->expon);
+             rear=rear->link;
             a=a->link;
-        }else if(a->exp == b->exp){
+        }else if(a->expon == b->expon){
             sum = a->coef +b->coef;
-            if(sum)rear=attach(sum,a->exp,rear);
+            if(sum)attach(rear,sum,a->expon);
             a=a->link;
             b=b->link;
+            rear=rear->link;
         }else{
-            rear=attach(b->coef,b->exp,rear);
+            attach(rear,b->coef,b->expon);
             b=b->link;
+            rear=rear->link;
         }
     }
+
     while (a)
     {
-        rear = attach(a->coef, a->exp, rear);
+        attach(rear, a->coef, a->expon);
+        rear=rear->link;
         a=a->link;
     }
     while (b)
     {
-        rear= attach(b->coef, b->exp,rear);
+        attach(rear, b->coef,b->expon);
+        rear=rear->link;
         b=b->link;
     }
-    temp=c;
-    c=c->link;
+
+    temp = result;
+    result = result->link;
     free(temp);
-    return c; //더미 노드를 제거하고 c는 맨앞을 가리킴
-    
-    
-    
+
+    return result;
 }
 
-void printnodeList(nodepointer nodeList){
-    while (nodeList) 
-    {
-        printf("%dx^%d",nodeList->coef, nodeList->exp);
-        if(nodeList->link)printf("+");
-        nodeList=nodeList->link;
+
+void pirintPolynomial(polyPointer poly){
+    while(poly){
+        printf("%dx^%d", poly->coef, poly->expon);
+        if(poly->link != NULL){
+            printf("+ ");
+        }
+        poly = poly->link;
     }
     printf("\n");
 }
 
+void freePolynomial(polyPointer poly){
+    polyPointer temp;
+    while(poly){
+        temp = poly;
+        poly = poly->link;
+        free(temp);
+    }
+}
+
 int main(){
-    nodepointer a =NULL, b=NULL, rearA, rearB, result,temp;
+    polyPointer a, b, result;
 
-    a=malloc(sizeof(node));
-    a->link=NULL;
-    rearA=a;
-    rearA=attach(3,4,rearA);
-    rearA=attach(2,2,rearA);
-    rearA=attach(1,0,rearA);
-    temp=a;
-    a=a->link;
-    free(temp);
+    a = createTerm(3, 4);
+    attach(a, 5, 3);
+    attach(a, 2, 2);
 
+    printf("first polynomial: ");
+    pirintPolynomial(a);
 
-    b=malloc(sizeof(node));
-    b->link=NULL;
-    rearB=b;
-    rearB=attach(3,4,rearB);
-    rearB=attach(2,2,rearB);
-    rearB=attach(1,0,rearB);
-    temp=b;
-    b=b->link;
-    free(temp);
+    b = createTerm(4, 3);
+    attach(b, 2, 2);
+    attach(b, 1, 1);
 
-    result = padd(a,b); //다더하고 만들어진 연결리스트 맨앞노드를 가리키는 포인터 result
+    printf("second polynomial: ");
+    pirintPolynomial(b);
 
-    printf("A(x): ");
-    printnodeList(a);
-    printf("B(x): ");
-    printnodeList(b);
-    printf("A(x)+ B(x): ");
-    printnodeList(result);
+    result = addPolynomials(a, b);
+    printf("\n sum: ");
+    pirintPolynomial(result);
 
+    freePolynomial(a);
+    freePolynomial(b);
+    freePolynomial(result);
 
     return 0;
-
 }
 
 
