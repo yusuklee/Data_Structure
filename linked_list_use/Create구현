@@ -1,0 +1,48 @@
+void create(int row, int col, int value) {
+    matrixPointer newNode, temp, prev;
+
+    // 1. 새로운 항목 노드 생성 및 값 초기화
+    newNode = getNode();
+    newNode->tag = entry;
+    newNode->u.entry.row = row;
+    newNode->u.entry.col = col;
+    newNode->u.entry.value = value;
+    newNode->u.entry.right = NULL;
+    newNode->u.entry.down = NULL;
+
+    // 2. 해당 행의 헤드 노드가 없으면 생성
+    if (hdnode[row] == NULL) {
+        hdnode[row] = getNode();
+        hdnode[row]->tag = head;
+        hdnode[row]->u.head.right = NULL;
+        // hdnode[row]->u.head.down는 사용하지 않음 (행 헤드로서 오른쪽 리스트만 사용)
+    }
+
+    // 3. 해당 열의 헤드 노드가 없으면 생성
+    if (colHead[col] == NULL) {
+        colHead[col] = getNode();
+        colHead[col]->tag = head;
+        colHead[col]->u.head.down = NULL;
+        // colHead[col]->u.head.right는 사용하지 않음 (열 헤드로서 아래쪽 리스트만 사용)
+    }
+
+    // 4. 행에 추가 (오름차순으로 col 정렬)
+    prev = hdnode[row]; // 헤드 노드를 시작점으로 사용
+    temp = prev->u.head.right;
+    while (temp != NULL && temp->u.entry.col < col) {
+        prev = temp;
+        temp = temp->u.entry.right;
+    }
+    newNode->u.entry.right = temp;
+    prev->u.head.right = newNode;
+
+    // 5. 열에 추가 (오름차순으로 row 정렬)
+    prev = colHead[col]; // 열 헤드 노드를 시작점으로 사용
+    temp = prev->u.head.down;
+    while (temp != NULL && temp->u.entry.row < row) {
+        prev = temp;
+        temp = temp->u.entry.down;
+    }
+    newNode->u.entry.down = temp;
+    prev->u.head.down = newNode;
+}
