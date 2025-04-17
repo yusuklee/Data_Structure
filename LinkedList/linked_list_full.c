@@ -51,11 +51,8 @@ listPointer insertNode(listPointer head, int data, int position){ //삽입위치
         return newnode; //head가 newnode가 됨
     }
     listPointer temp = head;
-    int i=1;
-    while (i<position && temp!=NULL)
-    {
-        temp = temp->link;
-        i++;
+    for(int i=0;i<position-1 && temp!=NULL;i++){ //계속 이동하다가 null로 갓으면 못찾은거고 현재 1번쨰 포지션에 있으니가 n번에있는 target에 간다고 치면 n-1번 링크를 타야겟지
+        temp=temp->link;
     }
     if(temp==NULL){
         printf("The position is larger than the size.\n");
