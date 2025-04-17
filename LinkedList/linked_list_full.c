@@ -51,8 +51,8 @@ listPointer insertNode(listPointer head, int data, int position){ //삽입위치
         return newnode; //head가 newnode가 됨
     }
     listPointer temp = head;
-    int i=0;
-    while (i<position-1 && temp!=NULL)
+    int i=1;
+    while (i<position && temp!=NULL)
     {
         temp = temp->link;
         i++;
