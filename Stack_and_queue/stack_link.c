@@ -1,79 +1,68 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
 
-typedef struct node{
-    int element;
-    struct node* next;
+typedef struct node
+{
+    int data;
+    struct node* link;
 }*stack;
 
-void fatalError(const char *msg){
-    fprintf(stderr, "%s\n",msg);
-    exit(1);
-}
-
-stack create(){
-    stack s = malloc(sizeof(struct node));
-    if(s==NULL){
-        fatalError("out of space\n");
-    }
-    s->next=NULL;
+stack createStack(){
+    stack s=malloc(sizeof(struct node));
+    s->link=NULL;
     return s;
 }
 
-void freeall(stack s){
-    if(s==NULL) fatalError("no stack exist");
+void push(stack s, int data){
+    struct node* newNode= malloc(sizeof(struct node));
+    if(!newNode)printf("새노드 안만들어짐.");
+    newNode->link=s->link;
+    s->link=newNode;
+    newNode->data=data;
+}
 
-    while (s->next!=NULL)
-    {
-        struct node* temp = s->next;
-        s->next = s->next->next;
+bool isEmpty(stack s){
+    return s->link==NULL;
+}
+
+int pop(stack s){
+    if(isEmpty(s)){
+        printf("stack is empty\n");
+        return NULL;
+    }
+    struct node* temp = s->link;
+    s->link=temp->link;
+    int data=temp->data;
+    free(temp);
+    return data;
+}
+
+int getTop(stack s){
+    if(isEmpty(s))return NULL;
+
+    return s->link->data;
+}
+
+void freeall(stack s){
+    if(isEmpty(s))return;
+    while (s->link!=NULL)
+    {   struct node* temp = s->link;
+        s->link=temp->link;
         free(temp);
     }
-}
-
-bool isempty(stack s){
-    return s->next==NULL;
-}
-
-void push(int x, stack s){
-    struct node* temp = malloc(sizeof(struct node));
-    if(temp==NULL){
-        fatalError("out of space");
-    }
-    temp->element=x;
-    temp->next=s->next;
-    s->next=temp;
-}
-
-void pop(stack s){
-    if(isempty(s))fatalError("empty");
-
-    struct node* firstcell = s->next;
-    s->next = s->next->next;
-    free(firstcell);
-}
-
-int top(stack s){
-    if(!isempty(s)) return s->next->element;
-
-    fatalError("empty");
-    return 0;
+    
 }
 
 int main(){
-    stack s = create();
-
-    push(10,s);
-    push(20,s);
-    push(30,s);
-    printf("top:%d\n",top(s));
-
-    pop(s);
-    printf("top:%d\n",top(s));
-
+    stack s = createStack();
+    push(s,10);
+    push(s,20);
+    push(s,30);
+    push(s,40);
+    printf("pop value:%d\n",pop(s));
+    printf("stack top:%d\n", getTop(s));
     freeall(s);
-    printf("is stack empty%s:",isempty(s)? "Yes":"No");
-
+    printf("is stack empty? : %s",isEmpty(s)? "yes": "no");
     return 0;
 }
