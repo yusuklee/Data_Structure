@@ -3,60 +3,53 @@
 #include <stdbool.h>
 
 #define MAX 100
-#define START (-1)
+#define START -1
 
-typedef struct stack{
+typedef struct Stack
+{
     int capacity;
     int top;
-    int* array;
-}*p;
+    int * array;
+}*stack;
 
-p create(int size){
-    p s= malloc(sizeof(struct stack));
-    if(s==NULL){
-        fprintf(stderr, "out of space\n");
-        exit(1);
-    }
-    s->array = malloc(sizeof(s->array[0])*size);
+stack create(int size){
+    stack s = malloc(sizeof(struct Stack));
+    if(!s)exit(1);
+    s->array=malloc(sizeof(int)*size);
     s->capacity=size;
     s->top=START;
     return s;
 }
 
-bool isempty(p s){
-    return s->top<0;
+bool isEmpty(stack s){
+    return s->top==-1;
 }
 
-bool isfull(p s){
-    return s->top >=s->capacity-1;
+bool isFull(stack s){
+    return s->top == s->capacity-1;
 }
 
-void push(int x, p s){
-    if(isfull(s)){
-        fprintf(stderr, "full stack\n");
-        return;
-    }
-    s->array[++s->top]=x;
+void push(int data, stack s){
+    if(isFull(s))return;
+    s->array[++s->top]=data;
 }
 
-void pop(p s){
-    if(isempty(s)){
-        fprintf(stderr, "empty stack\n");
-        return;
-    }
+void pop(stack s){
+    if(isEmpty(s))return;
     s->top--;
+    
 }
 
-int gettop(p s){
-    if(!isempty(s)){
+int gettop(stack s){
+    if(!isEmpty(s)){
         return s->array[s->top];
     }
-    fprintf(stderr, "Empty stack\n");
+    printf("empty\n");
     return 0;
 }
 
 int main(){
-    p s = create(MAX);
+    stack s = create(MAX);
 
     push(1,s);
     push(2,s);

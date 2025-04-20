@@ -1,66 +1,68 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct node{
+//링크 스택이랑 비슷한 느낌
+typedef struct node
+{
     int coef;
     int exp;
     struct node* link;
 }node;
 
-typedef node* nodepointer;
-
-nodepointer attach(int coef2, int exp2, nodepointer rear){
-    nodepointer temp = malloc(sizeof(node));
-    temp->coef =coef2;
-    temp->exp = exp2;
+node* attach(int coef, int exp, node* head){
+    node* temp = malloc(sizeof(node));
+    temp->coef = coef;
+    temp->exp = exp;
     temp->link = NULL;
-    rear->link = temp; //rear의 link가 새로운 노드를 가리킴.
-    return temp; //맨뒤 노드를 가리키는 temp를 return
+    head->link = temp;
+    return temp;
 }
 
-nodepointer padd(nodepointer a, nodepointer b){
-    nodepointer c, rear, temp;
+node * padd(node* a, node* b){
+    node* c;
+    node * last;
+    node * temp;
     int sum;
 
-    rear = malloc(sizeof(node));
-    rear->link = NULL;
-    c= rear;
+    last = malloc(sizeof(node)); //아무것도 없는 헤더 노드 만들고 이제 추가할떄마다 뒤에 추가됨
+    last->link = NULL;
+    c=last;
 
-    while (a && b)
+    while (a&&b)
     {
-        if(a->exp > b->exp){ //a의 지수가 더클때
-            rear = attach(a->coef, a->exp, rear);
+        if(a->exp > b->exp){
+            last= attach(a->coef,a->exp, last);
             a=a->link;
-        }else if(a->exp == b->exp){
-            sum = a->coef +b->coef;
-            if(sum)rear=attach(sum,a->exp,rear);
+        }else if(a->exp==b->exp){
+            sum=a->coef+b->coef;
+            if(sum)last=attach(sum,a->exp,last);
             a=a->link;
             b=b->link;
         }else{
-            rear=attach(b->coef,b->exp,rear);
+            last = attach(b->coef,b->exp,last);
             b=b->link;
         }
     }
+
     while (a)
     {
-        rear = attach(a->coef, a->exp, rear);
-        a=a->link;
+        last = attach(a->coef,a->exp, last);
+        a= a->link;
     }
+
     while (b)
     {
-        rear= attach(b->coef, b->exp,rear);
-        b=b->link;
+        last = attach(b->coef,b->exp, last);
+        b= b->link;
     }
-    temp=c;
-    c=c->link;
+    temp = c;
+    c = c->link;
     free(temp);
-    return c; //더미 노드를 제거하고 c는 맨앞을 가리킴
-    
+    return c; // 시작의 노드 (아무것도없는 헤드는 사라짐)
     
     
 }
 
-void printnodeList(nodepointer nodeList){
+void printnodeList(node* nodeList){
     while (nodeList) 
     {
         printf("%dx^%d",nodeList->coef, nodeList->exp);
@@ -71,14 +73,18 @@ void printnodeList(nodepointer nodeList){
 }
 
 int main(){
-    nodepointer a =NULL, b=NULL, rearA, rearB, result,temp;
+    node* a=NULL;
+    node* b=NULL;
+    node* lastA; node* lastB;
+    node* result;
+    node* temp;
 
     a=malloc(sizeof(node));
     a->link=NULL;
-    rearA=a;
-    rearA=attach(3,4,rearA);
-    rearA=attach(2,2,rearA);
-    rearA=attach(1,0,rearA);
+    lastA=a;
+    lastA=attach(3,4,lastA);
+    lastA=attach(2,2,lastA);
+    lastA=attach(1,0,lastA);
     temp=a;
     a=a->link;
     free(temp);
@@ -86,10 +92,10 @@ int main(){
 
     b=malloc(sizeof(node));
     b->link=NULL;
-    rearB=b;
-    rearB=attach(3,4,rearB);
-    rearB=attach(2,2,rearB);
-    rearB=attach(1,0,rearB);
+    lastB=b;
+    lastB=attach(3,4,lastB);
+    lastB=attach(2,2,lastB);
+    lastB=attach(1,0,lastB);
     temp=b;
     b=b->link;
     free(temp);

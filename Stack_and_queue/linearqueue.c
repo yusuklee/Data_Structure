@@ -1,68 +1,60 @@
-#include<stdio.h>
-#define MAX 100
+#include <stdio.h>
+#define MAX 100 //선형큐에서는 rear = -1  원형큐에서는 rear =0으로 둠 
+typedef struct node
+{
+    int data;
+}node;
 
-void printQueue();
-
-typedef struct{
-    int key;
-}element;
-
-element queue[MAX];
-int rear= -1;
-int front=0;
+node queue[MAX];
+int rear = -1; 
+int front = 0;
 
 void printQueue(){
-    if(front>rear){printf("queue is empty!\n"); return;}
-   printf("Queue:");
-   for(int i=front;i<=rear;i++){
-    printf("%d",queue[i].key);
-   } 
-   printf("\n\n");
+    if(front>rear)return;
+    printf("Queue:");
+    for(int i=front;i<=rear;i++){
+        printf("%d ",queue[i].data);
+    }
+    printf("\n");
 }
 
-void enqueue(element item){
-    if(rear>=MAX-1){
-        printf("queue is full\n");
-        return;
-    }
+void enqueue(node item){ //선형 큐 에서는 rear을 하나 증가시키고 거기다가 박는다
+    if(rear==MAX-1)return;
     rear++;
     queue[rear]=item;
 
-    printf("enqueue key=%d\n",item.key);
+    printf("enqueue data=%d\n",queue[rear].data);
     printQueue();
 }
 
-element dequeue(){
+node dequeue(){
     if(front>rear){
-        printf("there is no element to delete\n");
-        element dummy;
-        dummy.key=-1;
+        printf("there is no node to delete\n");
+        node dummy;
+        dummy.data=-1;
         return dummy;
     }
-
-    element item = queue[front];
-    front++;
-
-    printf("after dequeue\n");
+    node item = queue[front++];
+    printf("after delete\n");
     printQueue();
     return item;
 }
 
 int main(){
-    element input;
-    input.key=1;
+    node input;
+    input.data=1;
     enqueue(input);
 
-    input.key=2;
+    input.data=2;
     enqueue(input);
 
-    input.key=3;
+    input.data=3;
     enqueue(input);
 
-    input.key=4;
+    input.data=4;
     enqueue(input);
 
-    element output;
+    node output;
     output=dequeue();
     output=dequeue();
     output=dequeue(); 

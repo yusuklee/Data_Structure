@@ -1,81 +1,44 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
-typedef struct node{
-    int data;
-    struct node* llink;
-    struct node* rlink;
-}node;
+#define MAX 100
+#define START -1
 
-void insert(node* selectNode, node* newnode){
-    newnode->llink=selectNode;
-    newnode->rlink=selectNode->rlink;
-    if(selectNode->rlink!=NULL){
-        selectNode->rlink->llink=newnode;
-    }
-    selectNode->rlink = newnode;
+typedef struct Stack
+{
+    int capacity;
+    int top;
+    int* array;
+}*stack;
+
+stack create(int size){
+    stack s =malloc(sizeof(struct Stack));
+    if(!s)exit(1);
+    s->array=malloc(sizeof(int)*size);
+    s->capacity=size;
+    s->top=START;
+    return s;
 }
 
-void deleteNode(node* start, node* deleted){
-    if(start==deleted){
-        printf("you cant delete the start\n");
-        return;
-    }
-    deleted->llink->rlink=deleted->rlink;
-    if(deleted->rlink!=NULL){
-        deleted->rlink->llink=deleted->llink;
-    }
-    free(deleted);
+bool isEmpty(stack s){
+    return s->top==-1;
+}
+bool isFull(stack s){
+    return s->top>=s->capacity-1;
 }
 
-void printList(node* start){
-    node* current=start;
-    while(current!=NULL){
-        node* next = current->rlink;
-        printf("%d",current->data);
-        current=next;
-    }
+void push(int data, stack s){
+    if(isFull(s))return;
+    s->array[++s->top]=data;
 }
-void freeList(node * start){
-    node * current = start;
-    while (current!=NULL)
-    {
-        node* next = current->rlink;
-        free(current);
-        current=next;
-    }
+void pop(stack s){
+    if(isEmpty(s))return;
+    s->top--;
+}
+int getTopData(stack s){
+    if(isEmpty(s))return 0;
+    return s->array[s->top];
 }
 
-int main(){
-    node* start = malloc(sizeof(node));
-    start->data=0;
-    start->llink=NULL;
-    start->rlink=NULL;
 
-    node* node1=malloc(sizeof(node));
-    node1->data=1;
-    node1->llink=node1->rlink=NULL;
-    insert(start,node1);
-
-    node* node2=malloc(sizeof(node));
-    node2->data=2;
-    node2->llink=node2->rlink=NULL;
-    insert(node1,node2);
-
-    node* node3=malloc(sizeof(node));
-    node3->data=3;
-    node3->llink=node3->rlink=NULL;
-    insert(node2,node3);
-
-    printf("List after insertion: ");
-    printList(start);
-
-    deleteNode(start,node2);
-
-    printf("List after deletion of node with data2: ");
-    printList(start);
-
-    freeList(start);
-    return 0;
-
-}

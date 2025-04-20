@@ -1,70 +1,73 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct listNode *listPointer;
-
-typedef struct listNode
+typedef struct node
 {
     int data;
-    listPointer next;
-    listPointer prev;
-} node;
+    struct node* next;
+    struct node* prev;
+}node;
 
-listPointer createNode(int data){
-    listPointer newnode = malloc(sizeof(node));
-    if(newnode==NULL){
+node* createNode(int data){
+    node* newNode = malloc(sizeof(node));
+    if(!newNode){
         printf("Memory allocation failed\n");
         exit(1);
     }
-    newnode->data=data;
-    newnode->prev=NULL;
-    newnode->next= NULL;
-    return newnode; //새로운 노드 생성하고 양방향은 null을가리킴 
+
+    newNode->data=data;
+    newNode->next=NULL;
+    newNode->prev=NULL;
+    return newNode;
+
 }
 
-listPointer appendNode(listPointer head, int data){
-    listPointer newnode = createNode(data);
-    if(head==NULL){
-        return newnode;
+node* appendNode(node* head, int data){
+    node* newNode = createNode(data);
+    if(!head){
+        return newNode;
     }
-    listPointer temp = head;
-    while(temp->next!=NULL){ //temp가 마지막노드일때 멈춤
-        temp = temp->next;
-    } 
-    temp->next = newnode; //마지막노드와 생성된노드연결
-    newnode->prev= temp;
+    node* temp = head;
+    while (temp->next!=NULL)
+    {
+        temp=temp->next;
+    }
+    temp->next=newNode;
+    newNode->prev=temp;
     return head;
+    
 }
 
-void printList(listPointer head){
-    listPointer temp = head;
-    while (temp != NULL)
+void printList(node * head){
+    node* temp= head;
+    while (temp!=NULL)
     {
-        printf("%d -> ", temp->data);
-        temp = temp->next;
+        printf("%d-> ",temp->data);
+        temp=temp->next;
     }
     printf("NULL\n");
+    
 }
 
-void printReverseList(listPointer head){
-    if(head == NULL){
-        printf("NULL\n");
+void printReverseList(node* head){
+    if(!head){
+        printf("the list is empty\n");
         return;
     }
-    listPointer temp = head;
-
-    while(temp->next !=NULL){
-        temp = temp->next; //맨마지막노드로 이동
+    node* temp =head;
+    while (temp->next!=NULL)
+    {
+        temp=temp->next;
     }
-    while(temp!=NULL){
-        printf("%d ->",temp->data); //그후 next가아닌 prev로 뒤로이동하면서 반대순서로 출력하기
+    while (temp!=NULL)
+    {
+        printf("%d-> ",temp->data);
         temp=temp->prev;
     }
     printf("NULL\n");
 }
-
-void freeList(listPointer head){
-    listPointer temp;
+void freeList(node* head){
+    node* temp;
     while (head != NULL)
     {
         temp = head;
@@ -73,9 +76,8 @@ void freeList(listPointer head){
     }
     
 }
-
 int main(){
-    listPointer head = NULL;
+    node* head = NULL;
 
     head = appendNode(head, 1);
     head = appendNode(head, 2);
